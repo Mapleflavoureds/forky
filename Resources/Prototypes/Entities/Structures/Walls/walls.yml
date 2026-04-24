@@ -475,7 +475,7 @@
         density: 40000000
   - type: RCDDeconstructable #Frontier
     cost: 0 #Frontier
-    delay: 8 #Frontier
+    delay: 0 #Frontier
     fx: EffectRCDDeconstruct8 #Frontier
   - type: ArmorThickness
     thickness: 4
