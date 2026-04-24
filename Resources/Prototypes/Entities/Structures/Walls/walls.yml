@@ -472,7 +472,7 @@
         - FullTileMask
         layer:
         - WallLayer
-        density: 2000
+        density: 40000000
   - type: RCDDeconstructable #Frontier
     cost: 6 #Frontier
     delay: 8 #Frontier
