@@ -474,7 +474,7 @@
         - WallLayer
         density: 40000000
   - type: RCDDeconstructable #Frontier
-    cost: 6 #Frontier
+    cost: 0 #Frontier
     delay: 8 #Frontier
     fx: EffectRCDDeconstruct8 #Frontier
   - type: ArmorThickness
