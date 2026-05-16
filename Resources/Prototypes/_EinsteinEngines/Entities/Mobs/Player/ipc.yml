@@ -32,7 +32,7 @@
       enum.SurgeryUIKey.Key: # Shitmed
         type: SurgeryBui
       enum.BorgUiKey.Key:
-        type: BorgBoundUserInterface
+        type: IPCBoundUserInterface
 
   - type: ActivatableUI
     key: enum.BorgUiKey.Key

@@ -19,6 +19,8 @@ borg-ui-remove-battery = Remove
 borg-ui-modules-label = Modules:
 borg-ui-module-counter = {$actual}/{$max}
 
+ipc-ui-menu-title = IPC Interface
+
 # Transponder
 borg-transponder-disabled-popup = A brain shoots out the top of {$name}!
 borg-transponder-disabling-popup = Your transponder begins to lock you out of the chassis!
