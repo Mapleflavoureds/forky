@@ -5,6 +5,9 @@ using Content.Shared.Silicons.Borgs.Components;
 using Content.Shared.Whitelist;
 using Robust.Shared.Containers;
 using Content.Shared._NF.Silicons.Borgs; // Frontier
+using Content.Shared.Hands.Components; // mono
+using Content.Shared.Hands; // mono
+
 
 namespace Content.Server.Silicons.Borgs;
 
@@ -73,7 +76,10 @@ public sealed partial class BorgSystem
         if (!TryComp(chassis, out BorgChassisComponent? chassisComp))
             return;
 
-        if (chassisComp.SelectedModule == null)
+        if (!TryComp(chassis, out HandsComponent? handsComp)) // ts
+            return;
+
+        if (chassisComp.SelectedModule == null && handsComp.Hands.Count == null) // im like 90% my change does jackshit but it did fix my issue via fucking both up so whatever xoxo
             SelectModule(chassis, uid, chassisComp, component);
     }
 
