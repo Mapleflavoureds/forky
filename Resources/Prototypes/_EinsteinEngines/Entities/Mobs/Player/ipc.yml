@@ -11,14 +11,14 @@
     understands:
     - TauCetiBasic
     - RobotTalk
-  - type: HarpySinger
-  - type: Instrument
-    allowPercussion: true
-    allowProgramChange: true
-    program: 52
-  - type: SwappableInstrument
-    instrumentList:
-      "Daw": { 0: 0 }
+#  - type: HarpySinger
+#  - type: Instrument
+#    allowPercussion: true
+#    allowProgramChange: true
+#    program: 52
+  #- type: SwappableInstrument
+  #  instrumentList:
+  #    "Daw": { 0: 0 }
   - type: UserInterface
     interfaces:
       enum.InstrumentUiKey.Key:
@@ -31,9 +31,22 @@
         type: StrippableBoundUserInterface
       enum.SurgeryUIKey.Key: # Shitmed
         type: SurgeryBui
+      enum.BorgUiKey.Key:
+        type: BorgBoundUserInterface
+
+  - type: ActivatableUI
+    key: enum.BorgUiKey.Key
+  - type: ActivatableUIRequiresLock
   - type: PowerCellSlot
     cellSlotId: cell_slot
     fitsInCharger: true
+  - type: ContainerContainer
+    containers:
+      # borg_brain: !type:ContainerSlot { }
+      cell_slot: !type:ContainerSlot { }
+      borg_module: !type:Container { }
+  - type: BorgChassis
+
   - type: ItemSlots
     slots:
       cell_slot:
