@@ -22,19 +22,9 @@ public sealed class IPCBoundUserInterface : BoundUserInterface
         _menu = this.CreateWindow<IPCMenu>();
         _menu.SetEntity(Owner);
 
-        _menu.BrainButtonPressed += () =>
-        {
-            SendMessage(new BorgEjectBrainBuiMessage());
-        };
-
         _menu.EjectBatteryButtonPressed += () =>
         {
             SendMessage(new BorgEjectBatteryBuiMessage());
-        };
-
-        _menu.NameChanged += name =>
-        {
-            SendMessage(new BorgSetNameBuiMessage(name));
         };
 
         _menu.RemoveModuleButtonPressed += module =>

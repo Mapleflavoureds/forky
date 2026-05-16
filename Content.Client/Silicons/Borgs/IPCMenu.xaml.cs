@@ -16,13 +16,10 @@ public sealed partial class IPCMenu : FancyWindow
 {
     [Dependency] private readonly IEntityManager _entity = default!;
 
-    public Action? BrainButtonPressed;
     public Action? EjectBatteryButtonPressed;
-    public Action<string>? NameChanged;
     public Action<EntityUid>? RemoveModuleButtonPressed;
 
     public float AccumulatedTime;
-    private string _lastValidName;
     private List<EntityUid> _modules = new();
 
     public EntityUid Entity;
@@ -32,16 +29,8 @@ public sealed partial class IPCMenu : FancyWindow
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
 
-        _lastValidName = NameLineEdit.Text;
-
         EjectBatteryButton.OnPressed += _ => EjectBatteryButtonPressed?.Invoke();
-        BrainButton.OnPressed += _ => BrainButtonPressed?.Invoke();
 
-        NameLineEdit.OnTextChanged += OnNameChanged;
-        NameLineEdit.OnTextEntered += OnNameEntered;
-        NameLineEdit.OnFocusExit += OnNameFocusExit;
-
-        UpdateBrainButton();
     }
 
     public void SetEntity(EntityUid entity)
@@ -49,24 +38,6 @@ public sealed partial class IPCMenu : FancyWindow
         Entity = entity;
         BorgSprite.SetEntity(entity);
 
-        if (_entity.TryGetComponent<NameIdentifierComponent>(Entity, out var nameIdentifierComponent))
-        {
-            NameIdentifierLabel.Visible = true;
-            NameIdentifierLabel.Text = nameIdentifierComponent.FullIdentifier;
-
-            var fullName = _entity.GetComponent<MetaDataComponent>(Entity).EntityName;
-            // Frontier: prevent exceptions
-            if (fullName.Contains(nameIdentifierComponent.FullIdentifier))
-                NameLineEdit.Text = fullName.Substring(0, fullName.Length - nameIdentifierComponent.FullIdentifier.Length - 1);
-            else
-                NameLineEdit.Text = fullName;
-            // End Frontier
-        }
-        else
-        {
-            NameIdentifierLabel.Visible = false;
-            NameLineEdit.Text = _entity.GetComponent<MetaDataComponent>(Entity).EntityName;
-        }
     }
 
     protected override void FrameUpdate(FrameEventArgs args)
@@ -74,7 +45,7 @@ public sealed partial class IPCMenu : FancyWindow
         base.FrameUpdate(args);
 
         AccumulatedTime += args.DeltaSeconds;
-        BorgSprite.OverrideDirection = (Direction) ((int) AccumulatedTime % 4 * 2);
+        BorgSprite.OverrideDirection = (Direction)((int)AccumulatedTime % 4 * 2);
     }
 
     public void UpdateState(BorgBuiState state)
@@ -82,29 +53,9 @@ public sealed partial class IPCMenu : FancyWindow
         EjectBatteryButton.Disabled = !state.HasBattery;
         ChargeBar.Value = state.ChargePercent;
         ChargeLabel.Text = Loc.GetString("borg-ui-charge-label",
-            ("charge", (int) MathF.Round(state.ChargePercent * 100)));
+            ("charge", (int)MathF.Round(state.ChargePercent * 100)));
 
-        UpdateBrainButton();
         UpdateModulePanel();
-    }
-
-    private void UpdateBrainButton()
-    {
-        if (_entity.TryGetComponent(Entity, out BorgChassisComponent? chassis) && chassis.BrainEntity is { } brain)
-        {
-            BrainButton.Text = _entity.GetComponent<MetaDataComponent>(brain).EntityName;
-            BrainView.Visible = true;
-            BrainView.SetEntity(brain);
-            BrainButton.Disabled = false;
-            BrainButton.AddStyleClass(StyleBase.ButtonOpenLeft);
-        }
-        else
-        {
-            BrainButton.Text = Loc.GetString("borg-ui-no-brain");
-            BrainButton.Disabled = true;
-            BrainView.Visible = false;
-            BrainButton.RemoveStyleClass(StyleBase.ButtonOpenLeft);
-        }
     }
 
     private void UpdateModulePanel()
@@ -144,41 +95,5 @@ public sealed partial class IPCMenu : FancyWindow
             ModuleContainer.AddChild(control);
             _modules.Add(module);
         }
-    }
-
-    private void OnNameChanged(LineEdit.LineEditEventArgs obj)
-    {
-        if (obj.Text.Length == 0 ||
-            string.IsNullOrWhiteSpace(obj.Text) ||
-            string.IsNullOrEmpty(obj.Text))
-        {
-            return;
-        }
-
-        if (obj.Text.Length > HumanoidCharacterProfile.MaxNameLength)
-        {
-            obj.Control.Text = obj.Text.Substring(0, HumanoidCharacterProfile.MaxNameLength);
-        }
-
-        _lastValidName = obj.Control.Text;
-        obj.Control.Text = _lastValidName;
-    }
-
-    private void OnNameEntered(LineEdit.LineEditEventArgs obj)
-    {
-        NameChanged?.Invoke(_lastValidName);
-    }
-
-    private void OnNameFocusExit(LineEdit.LineEditEventArgs obj)
-    {
-        if (obj.Text.Length > HumanoidCharacterProfile.MaxNameLength ||
-            obj.Text.Length == 0 ||
-            string.IsNullOrWhiteSpace(obj.Text) ||
-            string.IsNullOrEmpty(obj.Text))
-        {
-            obj.Control.Text = _lastValidName.Trim();
-        }
-
-        NameChanged?.Invoke(_lastValidName);
     }
 }
