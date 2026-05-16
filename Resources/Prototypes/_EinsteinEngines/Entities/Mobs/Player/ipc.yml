@@ -46,6 +46,10 @@
       cell_slot: !type:ContainerSlot { }
       borg_module: !type:Container { }
   - type: BorgChassis
+    maxModules: 10
+    moduleWhitelist:
+      tags:
+      - BorgModuleGeneric
 
   - type: ItemSlots
     slots:
