@@ -76,10 +76,10 @@ public sealed partial class BorgSystem
         if (!TryComp(chassis, out BorgChassisComponent? chassisComp))
             return;
 
-        if (!TryComp(chassis, out HandsComponent? handsComp)) // ts
+        if (!TryComp(chassis, out HandsComponent? handsComp)) // Mono
             return;
 
-        if (chassisComp.SelectedModule == null && handsComp.Hands.Count == null) // im like 90% my change does jackshit but it did fix my issue via fucking both up so whatever xoxo
+        if (chassisComp.SelectedModule == null && handsComp.Hands.Count != 2) // Mono - made hands dependent section only
             SelectModule(chassis, uid, chassisComp, component);
     }
 
